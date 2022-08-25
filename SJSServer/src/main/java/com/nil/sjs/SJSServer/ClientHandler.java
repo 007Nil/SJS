@@ -6,11 +6,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.nil.sjs.SJSServer.Service.JsubService;
+
 
 public class ClientHandler implements Runnable {
 	private Socket client;
 	private BufferedReader input;
 	private PrintWriter output;
+	private JsubService jsubService = new JsubService();
 
 	public ClientHandler(Socket clientSocket) throws IOException {
 
@@ -23,7 +26,11 @@ public class ClientHandler implements Runnable {
 	public void run() {
 		try {
 			String command = input.readLine();
-			output.println("Command recived: "+command);
+			String binaryName = command.split(",")[0].split(":")[1];
+			System.out.println(binaryName);
+			if (binaryName.equals("jsub")) {
+				output.println(jsubService.JobSubmitService(command));
+			}
 		} catch (Exception e) {
 
 			System.err.println(e);
